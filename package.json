@@ -1,0 +1,32 @@
+{
+  "name": "postnote",
+  "version": "1.0.0",
+  "description": "An app for storing notes on the web",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha ./**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesskipp/postnote.git"
+  },
+  "keywords": [
+    "node",
+    "blog"
+  ],
+  "author": "JSkipp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamesskipp/postnote/issues"
+  },
+  "homepage": "https://github.com/jamesskipp/postnote#readme",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "yargs": "^10.0.3"
+  },
+  "devDependencies": {
+    "expect": "^21.2.1",
+    "mocha": "^4.0.1"
+  }
+}
