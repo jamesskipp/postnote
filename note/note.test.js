@@ -4,7 +4,7 @@ const fs = require('fs');
 const note = require('../note/note');
 
 const dirPath = './note/test_files_txt/';
-const filePath = dirPath + 'test_File_1';
+const filePath = dirPath + 'test_File_1.txt';
 const fileBody = 'some testing text';
 
 beforeEach((done) => {
@@ -18,7 +18,6 @@ beforeEach((done) => {
 
 describe('getTitle', () => {
   it('should replace _ with spaces in a valid file name', (done) => {
-    const filePath = 'test/test_File_1.txt';
     fs.appendFileSync(filePath, '');
 
     note.getTitle(filePath).then((title) => {
@@ -33,6 +32,16 @@ describe('getBody', () => {
   it('should return the contents of the file', (done) => {
     note.getBody(filePath).then((body) => {
       expect(body).toEqual(fileBody);
+      done();
+    }).catch((err) => done(err));
+  });
+});
+
+describe('getStats', () => {
+  it('should return the createion and edit time of the file', (done) => {
+    note.getStats(filePath).then((stats) => {
+      expect(typeof stats.btime).toBe('number');
+      expect(typeof stats.mtime).toBe('number');
       done();
     }).catch((err) => done(err));
   });

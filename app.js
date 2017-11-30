@@ -16,9 +16,12 @@ const argv = yargs
   .help()
   .argv;
 
-const command = argv._[0];
+var command = argv._[0];
 
 if (command === 'push') {
-  console.log(argv.path);
-  post.pushNote(argv.path);
+  post.pushNote(argv.path, (message) => {
+    console.log(message);
+  });
+} else {
+  console.log(`Command "${command}" not recognized.`);
 }

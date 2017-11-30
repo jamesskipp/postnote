@@ -25,4 +25,20 @@ const getBody = (notePath) => {
   });
 };
 
-module.exports = { getTitle, getBody };
+const getStats = (notePath) => {
+  return new Promise((resolve, reject) => {
+    fs.stat(notePath, (err, stats) => {
+      if (err) reject(err);
+      resolve({
+        btime: stats.birthtimeMs,
+        mtime: stats.mtimeMs,
+      });
+    });
+  });
+};
+
+module.exports = {
+  getTitle,
+  getBody,
+  getStats,
+};

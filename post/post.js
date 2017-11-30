@@ -1,20 +1,28 @@
+const axios = require('axios');
+
 const note = require('../note/note');
 
-const pushNote = (path) => {
-  var message= {};
+const pushNote = (path, callback) => {
+  var title, body, stats;
+  const postRoute = '';
 
-  note.getTitle(path).then((title) => {
-    message = { title }
-    console.log(message);
-  }).catch((err) => new Error(err));
+  note.getTitle(path)
+  .then((titleResult) => {
+    title = titleResult;
 
-    // message = {
-    //   title: note.getTitle(path),
-    //   body: note.getBody(path),
-    //   createdAt: note.getTime(path),
-    // };
+    return note.getBody(path)
+  }).then((bodyResult) => {
+    body = bodyResult;
 
-    // console.log(message);
+    return note.getStats(path)
+  }).then((statsResult) => {
+    stats = statsResult;
+    message = { title, body, stats };
+
+    return axios.post(postRoute)
+  }).then((res) => {
+    console.log(res);
+  }).catch((err) => { throw err });
 };
 
 module.exports = { pushNote };
