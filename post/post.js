@@ -2,27 +2,12 @@ const axios = require('axios');
 
 const note = require('../note/note');
 
-const pushNote = (path, callback) => {
-  var title, body, stats;
-  const postRoute = '';
-
-  note.getTitle(path)
-  .then((titleResult) => {
-    title = titleResult;
-
-    return note.getBody(path)
-  }).then((bodyResult) => {
-    body = bodyResult;
-
-    return note.getStats(path)
-  }).then((statsResult) => {
-    stats = statsResult;
-    message = { title, body, stats };
-
-    return axios.post(postRoute)
-  }).then((res) => {
-    console.log(res);
-  }).catch((err) => { throw err });
+const publishNotes = (path, dir, user, callback) => {
+  return new Promise((resolve, reject) => {
+    // TODO call to the proper note function - whether that is for each
+    // note in the path + dir, or to a new function in note like getNotes
+    // that will make that decision and return an array of notes.
+  });
 };
 
-module.exports = { pushNote };
+module.exports = { publishNotes };

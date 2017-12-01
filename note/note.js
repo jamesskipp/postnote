@@ -37,8 +37,32 @@ const getStats = (notePath) => {
   });
 };
 
+const getNote = (notePath) => {
+  return new Promise ((resolve, reject) => {
+    let title, body, stats;
+
+    getTitle(path)
+    .then((titleResult) => {
+      title = titleResult;
+
+      return getBody(path);
+    }).then((bodyResult) => {
+      body = bodyResult;
+
+      return getStats(path);
+    }).then((statsResult) => {
+      stats = statsResult;
+      message = { title, body, stats };
+
+      resolve(message);
+    }).catch((err) => reject(err));
+  });
+};
+
+
 module.exports = {
   getTitle,
   getBody,
   getStats,
+  getNote,
 };
