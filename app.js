@@ -23,6 +23,13 @@ const dirOptions = {
   demand: false,
   alias: 'd',
   default: config.defaults.dir,
+};
+const modifyOptions = {
+  type: 'boolean',
+  describe: 'Flag for modifying existing notes',
+  demand: false,
+  alias: 'm',
+  default: true,
 }
 
 const argv = yargs
@@ -50,8 +57,8 @@ if (command === 'publish') {
     return console.log('No default user found. Add a default user with "node postnote.js addUser (user)"');
   }
 
-  post.publishNotes(argv.path, argv.dir, argv.user, (message) => {
-    console.log(message);
+  post.publishNotes(argv.path, argv.dir, argv.user).then((response) => {
+    console.log(response);
   });
 } else if (command === 'addUser') {
   if (!argv.user) return console.log('arg user required.');

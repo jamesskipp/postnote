@@ -10,7 +10,7 @@ const getTitle = (notePath) => {
         reject(err);
       }
 
-      var title = path.basename(notePath, '.txt');
+      var title = path.parse(notePath).name;
       resolve(title.replace(/_/g, ' '));
     });
   });
@@ -19,7 +19,14 @@ const getTitle = (notePath) => {
 const getBody = (notePath) => {
   return new Promise((resolve, reject) => {
     fs.readFile(notePath, 'utf8', (err, data) => {
-      if (err) reject(err);
+      if (err) {
+        if (err.code === 'EISDIR') {
+          resolve('');
+        } else {
+          throw err;
+        }
+      }
+
       resolve(data);
     });
   });
@@ -32,6 +39,8 @@ const getStats = (notePath) => {
       resolve({
         btime: stats.birthtimeMs,
         mtime: stats.mtimeMs,
+        isFile: stats.isFile(),
+        isDir: stats.isDirectory(),
       });
     });
   });
@@ -41,15 +50,15 @@ const getNote = (notePath) => {
   return new Promise ((resolve, reject) => {
     let title, body, stats;
 
-    getTitle(path)
+    getTitle(notePath)
     .then((titleResult) => {
       title = titleResult;
 
-      return getBody(path);
+      return getBody(notePath);
     }).then((bodyResult) => {
       body = bodyResult;
 
-      return getStats(path);
+      return getStats(notePath);
     }).then((statsResult) => {
       stats = statsResult;
       message = { title, body, stats };
@@ -59,10 +68,33 @@ const getNote = (notePath) => {
   });
 };
 
+const fetchNotes = (notesPath) => {
+  return new Promise ((resolve, reject) => {
+    let notes = [];
+    getNote(notesPath)
+    .then((noteFile) => {
+      if (noteFile.stats.isDir) {
+        fs.readdir(notesPath, (err, files) => {
+          files = files.map(i => notesPath + '/' + i);
+          Promise.all((files).map(fetchNotes)).then((newNotes) => {
+            newNotes = [].concat.apply([], newNotes);
+            notes = notes.concat(newNotes);
+            return resolve(notes);
+          }).catch((err) => console.log(err));
+        });
+      } else if (noteFile.stats.isFile) {
+        return resolve(noteFile);
+      } else {
+        return resolve();
+      }
+    }).catch((err) => console.log(err));
+  });
+};
 
 module.exports = {
   getTitle,
   getBody,
   getStats,
   getNote,
+  fetchNotes,
 };

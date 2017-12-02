@@ -2,11 +2,12 @@ const axios = require('axios');
 
 const note = require('../note/note');
 
-const publishNotes = (path, dir, user, callback) => {
+const publishNotes = (path, dir, user) => {
   return new Promise((resolve, reject) => {
-    // TODO call to the proper note function - whether that is for each
-    // note in the path + dir, or to a new function in note like getNotes
-    // that will make that decision and return an array of notes.
+
+    note.fetchNotes(dir).then((notes) => {
+      console.log(notes);
+    });
   });
 };
 
