@@ -3,17 +3,35 @@ const path = require('path');
 
 const _ = require('lodash');
 
-const getTitle = (notePath) => {
-  return new Promise((resolve, reject) => {
-    fs.access(notePath, (err) => {
-      if (err) {
-        reject(err);
-      }
+// const getTitle = (notePath) => {
+//   return new Promise((resolve, reject) => {
+//     fs.access(notePath, (err) => {
+//       if (err) {
+//         reject(err);
+//       }
+//
+//       console.log('Title: ', title);
+//       var title = path.parse(notePath).name;
+//       resolve(title.replace(/_/g, ' '));
+//     });
+//   });
+// };
 
-      var title = path.parse(notePath).name;
-      resolve(title.replace(/_/g, ' '));
-    });
-  });
+const getTitle = async (notePath) => {
+  try {
+    await fs.access(notePath, () => {});
+    let title = path.parse(notePath).name;
+    if (title) {
+      console.log('Title', title);
+      title = title.replace(/_/g, ' ');
+      console.log('Replaced');
+      return title;
+    } else {
+      return undefined;
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const getBody = (notePath) => {

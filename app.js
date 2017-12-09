@@ -20,7 +20,7 @@ const userOptions = {
 const dirOptions = {
   type: 'string',
   describe: 'The default directory',
-  demand: false,
+  demand: true,
   alias: 'd',
   default: config.defaults.dir,
 };
@@ -34,7 +34,6 @@ const modifyOptions = {
 
 const argv = yargs
   .command('publish', 'publish a folder or .txt file', {
-    path: pathOptions,
     user: userOptions,
     dir: dirOptions,
   })
@@ -50,21 +49,24 @@ const argv = yargs
 var command = argv._[0];
 
 if (command === 'publish') {
-  if (!argv.path && !argv.dir) {
+  if (!argv.dir) {
     return console.log('No default directory found. Add a default directory with "node postnote.js addDir (dir)"');
   }
-  if (!argv.user) {
-    return console.log('No default user found. Add a default user with "node postnote.js addUser (user)"');
-  }
 
-  post.publishNotes(argv.path, argv.dir, argv.user).then((response) => {
+  // TODO Add User
+  post.publishNotes(argv.dir).then((response) => {
     console.log(response);
   });
 } else if (command === 'addUser') {
   if (!argv.user) return console.log('arg user required.');
   config.addUser(argv.user);
 } else if (command === 'addDir') {
-  config.addDir(argv.dir);
+  // TODO addDir should not work without dir specified.
+  if (argv.dir === config.defaults.dir) {
+    return console.log(`The directory "${argv.dir}" is already the default directory.`);
+  } else {
+    return config.addDir(argv.dir);
+  }
 } else if (command === undefined) {
   console.log('TODO // Implement Default Command');
 } else {

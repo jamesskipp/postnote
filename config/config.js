@@ -37,7 +37,7 @@ const addUser = (user) => {
 
 const addDir = (dir) => {
   try {
-    let config = JSON.parse('./config/config.json');
+    let config = JSON.parse(fs.readFileSync('./config/config.json'));
     config.dir = dir;
     fs.writeFileSync('./config/config.json', JSON.stringify(config));
     console.log('Successfully added dir ', dir);
